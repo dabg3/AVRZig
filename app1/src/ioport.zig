@@ -1,6 +1,30 @@
 const std = @import("std");
 const testing = std.testing;
 
+// Each port has:
+//
+//  data direction (DIR) register
+//      DIRn bit set direction of pin n
+//      0 -> input, 1 -> output
+//
+//  data output value (OUT) register
+//      when DIRn = 1, OUTn bit set value of pin n
+//      0 -> driven low, 1 -> driven high
+//
+//  data input value (IN) for reading pins
+//      always readable unless digital output is disabled
+//      INn bit reads pin n
+//
+//  pin configuration register (PINnCTRL) for each pin
+//      I/O configurations options
+//          totem-pole
+//          wired-AND
+//          wired-OR
+//          inverted input/output
+//
+//          totem-pole pull-up/pull-down have active resistors only when the pin is set as input
+//          wired-AND/OR pull-up/pull-down always have active resistors
+
 pub fn create_pin(comptime port: u8, comptime pin: u8) u8 {
     return port * 8 + pin;
 }
