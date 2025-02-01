@@ -1,19 +1,37 @@
-const asf = @import("root.zig");
+const hw = @import("atxmega256a3bu.zig");
+const PORTD = hw.devices.ATxmega256A3BU.peripherals.PORTD;
+const PORTR = hw.devices.ATxmega256A3BU.peripherals.PORTR;
+
+// Each port has:
+//
+//  data direction (DIR) register
+//      DIRn bit set direction of pin n
+//      0 -> input, 1 -> output
+//
+//  data output value (OUT) register
+//      when DIRn = 1, OUTn bit set value of pin n
+//      0 -> driven low, 1 -> driven high
+//
+//  data input value (IN) for reading pins
+//      always readable unless digital output is disabled
+//      INn bit reads pin n
+//
+//  pin configuration register (PINnCTRL) for each pin
+//      I/O configurations options
+//          totem-pole
+//          wired-AND
+//          wired-OR
+//          inverted input/output
+//
+//          totem-pole pull-up/pull-down have active resistors only when the pin is set as input
+//          wired-AND/OR pull-up/pull-down always have active resistors
 
 pub fn main() void {
-    // The yellow LEDs (PR0, PR1) and the red LED can be
+    // The yellow LEDs (PR0, PR1) and the red LED (PD4) can be
     // activated by driving the connected I/O line to GND.
-    //
-    // configure PIN 0 on PORT R:
-    //  DIR0 = 1
-    //  PIN0CTRL wired-OR with internal pull-down.
-    //  OUT0 = 0
-    //
-    // TODO WRITE A BETTER API
-    const led012Flags = asf.ioport.PinFlags{ .init = false };
-    // base + (portID * port_offset)
-    // portR == 15 (portID)
-    const portR: *u8 = @ptrFromInt(0x600 + (15 * 0x20));
-    // 1 means pin 0 -> 00000001
-    asf.ioport.configure_port_pin(portR, 1, led012Flags);
+
+    // activating PR0/1
+    const pin01_bitmask: u8 = 0x3;
+    PORTR.DIR = pin01_bitmask;
+    PORTR.OUT = ~pin01_bitmask;
 }
