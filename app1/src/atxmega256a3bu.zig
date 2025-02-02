@@ -899,7 +899,7 @@ pub const types = struct {
                 USBSRC: CLK_USBSRC,
                 /// Prescaler Division Factor
                 USBPSDIV: CLK_USBPSDIV,
-                padding: u2,
+                padding: u3,
             }),
         };
 
